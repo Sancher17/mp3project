@@ -1,0 +1,76 @@
+version: '3'
+services:
+  resourceService:
+    image: 'resource_service:latest'
+    build:
+      context: .
+    container_name: resourceService
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    networks:
+      - network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=alex
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - song.service.url=http://songService:8081/
+
+  songService:
+    image: 'song_service:latest'
+    build:
+      context: .
+    container_name: songService
+    depends_on:
+      - db2      
+    ports:
+      - "8081:8081"
+    networks:
+      - network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db2:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=alex
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+          
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - network
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=alex
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=postgres
+
+  db2:
+    image: 'postgres:latest'
+    container_name: db2
+    restart: always
+    environment:
+      - POSTGRES_USER=alex
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - network
+    volumes:
+      - db2:/var/lib/postgresql/data
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  db:
+    driver: local
+  db2:
+    driver: local
