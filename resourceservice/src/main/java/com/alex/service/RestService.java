@@ -31,7 +31,7 @@ public class RestService {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new RuntimeException();
+            throw new RuntimeException("An internal server error has occurred");
         }
     }
 }

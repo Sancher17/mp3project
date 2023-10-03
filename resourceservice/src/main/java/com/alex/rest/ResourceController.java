@@ -37,7 +37,6 @@ public class ResourceController {
 
     private final ResourceService resourceService;
 
-    @Transactional
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") long id, HttpServletResponse response) throws SQLException, IOException {
         log.info("Request for ID: {}", id);
