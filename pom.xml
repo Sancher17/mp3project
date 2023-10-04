@@ -11,6 +11,7 @@
     <modules>
         <module>resourceservice</module>
         <module>songservice</module>
+        <module>discoveryservice</module>
     </modules>
 
     <parent>
@@ -86,6 +87,7 @@
             <artifactId>tika-core</artifactId>
             <version>2.9.0</version>
         </dependency>
+
     </dependencies>
 
 </project>
