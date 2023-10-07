@@ -10,6 +10,8 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +30,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/resources")
 public class ResourceController {
+
+    @Autowired
+    private Environment env;
 
     private static final String IDS_SEPARATOR = ",";
     public static final String ERROR_MESSAGE_400 = "Validation failed or request body is invalid MP3";
@@ -48,6 +53,13 @@ public class ResourceController {
             return new ResponseEntity<>(ERROR_MESSAGE_404, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        String port = env.getProperty("local.server.port");
+        log.info("OK");
+        return ResponseEntity.ok("OK, port: " + port);
     }
 
     @GetMapping("/ids")
