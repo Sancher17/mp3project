@@ -48,13 +48,12 @@ services:
     image: 'song_service:latest'
     build:
       context: .
-    container_name: songService
+#    container_name: songService
     depends_on:
       - db2
       - discovery
-
-    ports:
-      - "8081:8081"
+#    ports:
+#      - "8081:8081"
     networks:
       - network
     environment:
@@ -63,6 +62,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=secret
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - eureka.client.service-url.defaultZone=http://discovery:8761/eureka
+    deploy:
+      mode: replicated
+      replicas: 2
           
   db:
     image: 'postgres:latest'
