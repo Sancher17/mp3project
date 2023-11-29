@@ -1,29 +1,5 @@
 version: '3'
 services:
-  discovery:
-    image: 'discovery_service:latest'
-    build:
-      context: .
-    container_name: discovery
-    ports:
-      - "8761:8761"
-    networks:
-      - network
-
-  gatewayService:
-    image: 'gateway_service:latest'
-    build:
-      context: .
-    container_name: gatewayService
-    ports:
-      - "8084:8084"
-    networks:
-      - network
-    depends_on:
-      - discovery
-    environment:
-      - eureka.client.service-url.defaultZone=http://discovery:8761/eureka
-
   resourceService:
     image: 'resource_service:latest'
     build:

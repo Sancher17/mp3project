@@ -1,0 +1,153 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: resource-service
+  namespace: k8s-program
+spec:
+  selector:
+    app: resource-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-service-deployment
+  namespace: k8s-program
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-service
+  template:
+    metadata:
+      labels:
+        app: resource-service
+    spec:
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: resource-service-pvc
+      containers:
+        - name: resource-service
+          image: 127.0.0.1:5000/local/resource_service:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: "/mnt/data"
+              name: data-volume
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://db:5432/postgres
+            - name: SPRING_DATASOURCE_USERNAME
+              value: alex
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: secret
+            - name: song.service.url
+              value: http://songService:8081/
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-service
+  namespace: k8s-program
+spec:
+  selector:
+    app: song-service
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: song-service-deployment
+  namespace: k8s-program
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: song-service
+  template:
+    metadata:
+      labels:
+        app: song-service
+    spec:
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: resource-service-pvc
+      containers:
+        - name: song-service
+          image: 127.0.0.1:5000/local/song_service:latest
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - mountPath: "/mnt/data"
+              name: data-volume
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://db:5432/postgres
+            - name: SPRING_DATASOURCE_USERNAME
+              value: alex
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: k8s-program
+spec:
+  selector:
+    app: db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: k8s-program
+spec:
+  serviceName: db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: postgres
+            - name: POSTGRES_USER
+              value: alex
+            - name: POSTGRES_PASSWORD
+              value: secret
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: hostpath
+        resources:
+          requests:
+            storage: 1Gi

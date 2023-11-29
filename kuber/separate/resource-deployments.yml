@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: resource-service
+  namespace: k8s-program
+spec:
+  selector:
+    app: resource-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-service-deployment
+  namespace: k8s-program
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-service
+  template:
+    metadata:
+      labels:
+        app: resource-service
+    spec:
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: resource-service-pvc
+      containers:
+        - name: resource-service
+          image: 127.0.0.1:5000/local/resource_service:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: "/mnt/data"  # Replace this with the path where you want to use the persistent storage inside the container
+              name: data-volume
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://db:5432/postgres
+            - name: SPRING_DATASOURCE_USERNAME
+              value: alex
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: secret
+            - name: song.service.url
+              value: http://songService:8081/

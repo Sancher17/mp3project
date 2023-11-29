@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-service
+  namespace: k8s-program
+spec:
+  selector:
+    app: song-service
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: song-service-deployment
+  namespace: k8s-program
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: song-service
+  template:
+    metadata:
+      labels:
+        app: song-service
+    spec:
+      containers:
+        - name: song-service
+          image: 127.0.0.1:5000/local/song_service:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://db:5432/postgres
+            - name: SPRING_DATASOURCE_USERNAME
+              value: alex
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: secret
