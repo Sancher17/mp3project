@@ -18,7 +18,7 @@ metadata:
   name: resource-service-deployment
   namespace: k8s-program
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: resource-service
@@ -71,7 +71,7 @@ metadata:
   name: song-service-deployment
   namespace: k8s-program
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: song-service
