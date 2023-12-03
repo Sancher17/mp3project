@@ -4,6 +4,7 @@ https://gimlet.io/k8s-yaml-generator?chart=onechart#
 
 ----------------------------------------------------------------
 RUN
+kubectl delete namespace k8s-program
 kubectl apply -f namespace.yml
 kubectl apply -f secret.yaml
 kubectl apply -f config-map.yaml
@@ -19,7 +20,6 @@ kubectl rollout history deployment song-service-deployment
 kubectl rollout undo deployment song-service-deployment --to-revision=2
 
 
-
 ----------------------------------------------------------------
 Support commands
 kubectl get all
@@ -32,3 +32,4 @@ kubectl delete pvc resource-service-pvc -n k8s-program
 kubectl scale deployment resource-service-deployment --replicas=0
 kubectl config set-context --current --namespace=k8s-program
 kubectl logs resource-service-deployment-84fdf77cd6-g2k4f --tail=100 -f
+kubectl logs db-0 --tail=100 -f
