@@ -29,7 +29,10 @@ kubectl get pvc -n k8s-program
 kubectl get pv -n k8s-program
 kubectl delete pv resource-service-pv -n k8s-program
 kubectl delete pvc resource-service-pvc -n k8s-program
+kubectl delete pod db-0 -n k8s-program
 kubectl scale deployment resource-service-deployment --replicas=0
+kubectl scale db-0 --replicas=0  -n k8s-program
 kubectl config set-context --current --namespace=k8s-program
 kubectl logs resource-service-deployment-84fdf77cd6-g2k4f --tail=100 -f
 kubectl logs db-0 --tail=100 -f
+kubectl scale deployment --all --replicas=0 -n  k8s-program
