@@ -58,8 +58,9 @@ public class ResourceController {
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         String port = env.getProperty("local.server.port");
-        log.info("OK");
-        return ResponseEntity.ok("OK, port: " + port);
+        String msg = "I am OK, port: " + port;
+        log.info(msg);
+        return ResponseEntity.ok(msg);
     }
 
     @GetMapping("/ids")

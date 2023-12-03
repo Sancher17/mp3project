@@ -1,0 +1,34 @@
+Kuber - generator
+https://k8syaml.com/
+https://gimlet.io/k8s-yaml-generator?chart=onechart#
+
+----------------------------------------------------------------
+RUN
+kubectl apply -f namespace.yml
+kubectl apply -f secret.yaml
+kubectl apply -f config-map.yaml
+kubectl apply -f persistent-volume.yml
+kubectl apply -f persistent-volume-claim.yml
+
+kubectl apply -f db-statefulset.yaml
+kubectl apply -f resource-deployments.yml
+kubectl apply -f song-deployments.yml
+----------------------------------------------------------------
+Rollout
+kubectl rollout history deployment song-service-deployment
+kubectl rollout undo deployment song-service-deployment --to-revision=2
+
+
+
+----------------------------------------------------------------
+Support commands
+kubectl get all
+kubectl get namespace
+kubectl delete namespace k8s-program
+kubectl get pvc -n k8s-program
+kubectl get pv -n k8s-program
+kubectl delete pv resource-service-pv -n k8s-program
+kubectl delete pvc resource-service-pvc -n k8s-program
+kubectl scale deployment resource-service-deployment --replicas=0
+kubectl config set-context --current --namespace=k8s-program
+kubectl logs resource-service-deployment-84fdf77cd6-g2k4f --tail=100 -f
