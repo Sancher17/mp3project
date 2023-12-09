@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: {{ .Values.namespace }}
+data:
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/postgres"
+  song.service.url: "http://songService:8081/"
+  current-date: "{{ include "mychart.labels.date" . }}"
+  version: "{{ include "mychart.labels.version" . }}"
+  init-script.sql: |
+    CREATE TABLE IF NOT EXISTS users (
+         id INT PRIMARY KEY, 
+         username VARCHAR (50) NOT NULL,
+         email VARCHAR(100) NOT NULL);

@@ -1,0 +1,5 @@
+apiVersion: v2
+name: resource-service-chart
+description: Helm chart for deploying resource-service
+version: 1.0.0
+appVersion: 1.0.0

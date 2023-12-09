@@ -1,0 +1,2 @@
+Run
+helm install resource-service ./resource-service-chart -f values.yaml

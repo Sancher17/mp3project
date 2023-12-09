@@ -1,0 +1,7 @@
+replicaCount: 1
+namespace: k8s-program
+
+image:
+  repository: 127.0.0.1:5000/local/resource_service
+  tag: latest
+  pullPolicy: IfNotPresent
