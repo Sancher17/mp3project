@@ -1,13 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.resourceService.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Values.resourceService.name }}
+  ports:
+    - protocol: TCP
+      port:  {{ .Values.resourceService.port }}
+      targetPort:  {{ .Values.resourceService.port }}
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "resource-service-chart.fullname" . }}
+  name: {{ .Values.resourceService.name }}
   namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ .Values.resourceService.name }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,30 +30,30 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Values.resourceService.name }}
     spec:
       volumes:
         - name: data-volume
           persistentVolumeClaim:
             claimName: resource-service-pvc
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Values.resourceService.name }}
           envFrom:
             - configMapRef:
-                name: app-config
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+                name: {{ .Values.configMap }}
+          image: "{{ .Values.resourceService.image.repository }}:{{ .Values.resourceService.image.tag }}"
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.resourceService.port }}
           readinessProbe:
             httpGet:
               path: /resources/health
-              port: 8080
+              port: {{ .Values.resourceService.port }}
             initialDelaySeconds: 10
             periodSeconds: 20
           livenessProbe:
             httpGet:
               path: /resources/health
-              port: 8080
+              port: {{ .Values.resourceService.port }}
             initialDelaySeconds: 15
             periodSeconds: 30
           volumeMounts:
@@ -49,7 +63,7 @@ spec:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:
-                  name: app-config
+                  name: {{ .Values.configMap }}
                   key: SPRING_DATASOURCE_URL
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
@@ -64,5 +78,5 @@ spec:
             - name: song.service.url
               valueFrom:
                 configMapKeyRef:
-                  name: app-config
+                  name: {{ .Values.configMap }}
                   key: song.service.url

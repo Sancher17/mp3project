@@ -1,0 +1,27 @@
+replicaCount: 1
+namespace: k8s-program
+configMap: app-config
+
+dbService:
+  name: db-service
+  port: 5432
+  image:
+    repository: postgres
+    tag: latest
+    pullPolicy: IfNotPresent
+
+resourceService:
+  name: resource-service
+  port: 8080
+  image:
+    repository: 127.0.0.1:5000/local/resource_service
+    tag: latest
+    pullPolicy: IfNotPresent
+
+songService:
+  name: song-service
+  port: 8081
+  image:
+    repository: 127.0.0.1:5000/local/song_service
+    tag: v2
+    pullPolicy: IfNotPresent
