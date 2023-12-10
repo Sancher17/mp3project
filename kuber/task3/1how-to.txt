@@ -16,7 +16,6 @@ helm uninstall music-app
 Run helm once again, but this time set namespace and replica-count
  for helm install to non-default values.
 1. kubectl create namespace alex-ns
-2. helm install music-app-custom  music-app-chart --namespace alex-ns --set replicaCount=2
 2. helm install music-app-custom music-app-chart --set namespace=alex-ns --set replicaCount=2
 
 
