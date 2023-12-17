@@ -4,8 +4,8 @@ metadata:
   name: {{ .Values.configMap }}
   namespace: {{ .Values.namespace }}
   labels:
-    date: {{ include "current-date" . }}
-     {{- include "version-label" . | nindent 4 }}
+    date: {{ include "current-date" . | quote }}
+    version: {{ include "version-label" . | quote }}
 data:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://db-service:5432/postgres"
   song.service.url: "http://songService:8081/"
