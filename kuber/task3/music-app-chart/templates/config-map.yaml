@@ -3,11 +3,12 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.configMap }}
   namespace: {{ .Values.namespace }}
+  labels:
+    date: {{ include "current-date" . }}
+     {{- include "version-label" . | nindent 4 }}
 data:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://db-service:5432/postgres"
   song.service.url: "http://songService:8081/"
-  current-date: "{{ include "mychart.labels.date" . }}"
-  version: "{{ include "mychart.labels.version" . }}"
   init-script.sql: |
     CREATE TABLE IF NOT EXISTS users (
          id INT PRIMARY KEY, 

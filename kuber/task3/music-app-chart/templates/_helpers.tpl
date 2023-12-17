@@ -1,10 +1,9 @@
+{{/* Current date */}}
+{{- define "current-date" -}}
+{{- now | htmlDate }}
+{{- end -}}
 
-# Set the current date
-{{- define "mychart.labels.date" -}}
-  {{- now }}
-{{- end }}
-
-# Set the version label
-{{- define "mychart.labels.version" -}}
-  1.0.0
-{{- end }}
+{{/* Version */}}
+{{- define "version-label" -}}
+{{- printf "version=%s" .Chart.AppVersion }}
+{{- end -}}
