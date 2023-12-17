@@ -1,0 +1,40 @@
+Run with default values:
+helm list
+helm list -n k8s-program
+helm list -n alex-ns
+helm install music-app music-app-chart
+helm upgrade music-app music-app-chart
+helm delete music-app
+helm uninstall music-app
+
+kubectl get pod -n k8s-program
+kubectl create namespace k8s-program
+kubectl delete namespace k8s-program
+
+helm uninstall music-app
+
+====================================================
+Run helm once again, but this time set namespace and replica-count
+ for helm install to non-default values.
+1. kubectl create namespace alex-ns
+2. helm install music-app-custom music-app-chart --set namespace=alex-ns --set replicaCount=2
+
+====================================
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml
+kubectl get ingress
+kubectl describe ingress music-ingress
+
+curl http://alex.com/resources/1
+curl http://alex.com/songs/1
+
+kubectl config set-context --current --namespace=k8s-program
+kubectl logs -l app=resource-service -n k8s-program --tail=100 -f
+kubectl logs -l app=song-service -n k8s-program --tail=100 -f
+kubectl get pods -n ingress-nginx
+kubectl logs -n ingress-nginx ingress-nginx-controller-6fcf745c45-7zzrp --tail=100 -f
+
+kubectl get endpoints song-service -n k8s-program
+kubectl get endpoints resource-service -n k8s-program
+
+kubectl get service song-service -n k8s-program
+kubectl get service resource-service -n k8s-program
